@@ -1,0 +1,68 @@
+/*******************************
+ **     Global parameters     **
+ *******************************/
+title = "Case D Simulation Scenario with 30K SNP Array";
+nrep  = 1;                    //Number of replicates
+h2    = 0.3;                  //Heritability
+qtlh2 = 0.3;                  //QTL heritability
+phvar = 1.0;                  //Phenotypic variance
+
+/*******************************
+ **   Historical population   **
+ *******************************/
+begin_hp;
+   hg_size = 1020 [0];         //Size of the historical generations
+   nmlhg   = 20;              //Number of males in the last generation
+end_hp;
+
+/*******************************
+ **        Populations        **
+ *******************************/
+begin_pop = "p1";
+   begin_founder;
+      male   [n =  20, pop = "hp"];
+      female [n = 1000, pop = "hp"];
+   end_founder;
+   ls  = 3;                   //Litter size
+   pmp = 0.5 /fix;            //Proportion of male progeny 
+   ng  = 10;                  //Number of generations
+   md  = rnd;                //Mating design (Random)
+   sd  = rnd;              //Selection design (random)
+   begin_popoutput;
+        data;
+        genotype / seq / gen 1;
+        stat;
+   end_popoutput;
+end_pop;
+
+/*******************************
+ **          Genome           **
+ *******************************/
+begin_genome;
+   begin_chr = 26;
+      chrlen = 100;           //Chromosome length
+      nmloci = 1000;             //Number of markers
+      mpos   = rnd;  //Marker positions
+      nma    = all 2;         //Number of marker alleles
+      maf    = eql;           //Marker allele frequencies
+      nqloci = 100;             //Number of QTL
+      qpos   = rnd;      //QTL positions
+      nqa    = all 2;         //Number of QTL alleles
+      qaf    = eql;           //QTL allele frequencies
+      qae    = rndg 0.4;    //QTL allele effects
+   end_chr;
+   mmutr     = 2.5e-5 /recurrent; //Marker mutation rate
+   qmutr     = 2.5e-5 /recurrent;            //QTL mutation rate
+   interference = 25;             //crossover interference
+   r_mpos_g;                  // Randomize marker positions across genome
+   r_qpos_g;                  // Randomize marker positions across genome
+end_genome;
+
+/*******************************
+ **       Output options      **
+ *******************************/
+begin_output;
+  linkage_map;
+  hp_stat;
+  allele_effect;
+end_output;
